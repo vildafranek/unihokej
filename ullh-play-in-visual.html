@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ULLH Play-in systém — Univerzitní liga ledního hokeje</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0f0f10;
+    --surface: #1a1a1d;
+    --surface-border: #2a2a2d;
+    --text: #ffffff;
+    --text-secondary: #a0a0a0;
+    --accent: #3b82f6;
+    --accent-muted: rgba(59, 130, 246, 0.15);
+    --ice: #7dd3fc;
+    --ice-muted: rgba(125, 211, 252, 0.12);
+    --gold: #facc15;
+    --gold-muted: rgba(250, 204, 21, 0.15);
+    --red: #ef4444;
+    --red-muted: rgba(239, 68, 68, 0.12);
+    --green: #22c55e;
+    --green-muted: rgba(34, 197, 94, 0.12);
+    --orange: #f97316;
+    --orange-muted: rgba(249, 115, 22, 0.12);
+    --purple: #a78bfa;
+    --purple-muted: rgba(167, 139, 250, 0.12);
+    --radius: 12px;
+    --max-w: 1000px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* === HERO === */
+  .hero {
+    padding: 80px 0 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    background: var(--accent-muted);
+    border: 1px solid rgba(59,130,246,0.25);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--ice), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* === SECTIONS === */
+  section {
+    padding: 80px 0;
+  }
+
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .section-desc {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    max-width: 650px;
+    margin-bottom: 40px;
+  }
+
+  /* === STAT CARDS === */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 60px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+  }
+
+  .stat-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .stat-number {
+    font-size: 2.2rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  /* === PHASE FLOW === */
+  .phase-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  .phase-connector {
+    width: 3px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--surface-border), var(--accent));
+    margin: 0 auto;
+    border-radius: 2px;
+  }
+
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .phase-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 4px 0 0 4px;
+  }
+
+  .phase-card.phase-1::before { background: var(--ice); }
+  .phase-card.phase-2::before { background: var(--accent); }
+  .phase-card.phase-3::before { background: var(--orange); }
+  .phase-card.phase-4::before { background: var(--purple); }
+  .phase-card.phase-5::before { background: var(--gold); }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .phase-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .phase-1 .phase-num { background: var(--ice-muted); color: var(--ice); }
+  .phase-2 .phase-num { background: var(--accent-muted); color: var(--accent); }
+  .phase-3 .phase-num { background: var(--orange-muted); color: var(--orange); }
+  .phase-4 .phase-num { background: var(--purple-muted); color: var(--purple); }
+  .phase-5 .phase-num { background: var(--gold-muted); color: var(--gold); }
+
+  .phase-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  .phase-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .phase-body {
+    padding-left: 60px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  .phase-body p {
+    margin-bottom: 12px;
+  }
+
+  /* === BRACKET VISUAL === */
+  .bracket-container {
+    overflow-x: auto;
+    padding: 8px 0;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .bracket {
+    display: flex;
+    gap: 24px;
+    align-items: stretch;
+    min-width: 800px;
+    padding: 8px;
+  }
+
+  .bracket-round {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+    min-width: 200px;
+  }
+
+  .bracket-round-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 4px;
+  }
+
+  .bracket-match {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .bracket-team {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--surface-border);
+  }
+
+  .bracket-team:last-child {
+    border-bottom: none;
+  }
+
+  .bracket-team.seed {
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .bracket-team .seed-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+
+  .seed-top { background: var(--gold-muted); color: var(--gold); }
+  .seed-mid { background: var(--accent-muted); color: var(--accent); }
+  .seed-low { background: var(--surface-border); color: var(--text-secondary); }
+
+  .bracket-vs {
+    font-size: 10px;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 2px;
+    background: rgba(255,255,255,0.03);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .bracket-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    color: var(--surface-border);
+    font-size: 24px;
+  }
+
+  /* === MATCHUP GRID (semifinále) === */
+  .matchup-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .matchup-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--surface-border);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .matchup-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+
+  .matchup-teams {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 1.3rem;
+    font-weight: 800;
+  }
+
+  .matchup-teams .vs {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+
+  .matchup-teams .team-seed {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .matchup-teams .team-seed small {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  /* === FINÁLE GRID === */
+  .finale-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  /* === CALLOUT === */
+  .callout {
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-top: 20px;
+  }
+
+  .callout-accent {
+    background: var(--accent-muted);
+    border: 1px solid rgba(59,130,246,0.2);
+  }
+
+  .callout-gold {
+    background: var(--gold-muted);
+    border: 1px solid rgba(250,204,21,0.2);
+  }
+
+  .callout-orange {
+    background: var(--orange-muted);
+    border: 1px solid rgba(249,115,22,0.2);
+  }
+
+  .callout-purple {
+    background: var(--purple-muted);
+    border: 1px solid rgba(167,139,250,0.2);
+  }
+
+  .callout-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .callout-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .callout-text strong {
+    color: var(--text);
+  }
+
+  /* === FINAL FOUR VISUAL === */
+  .f4-bracket {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .f4-round {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .f4-match {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 10px;
+    padding: 16px 24px;
+    text-align: center;
+    flex: 1;
+    max-width: 280px;
+  }
+
+  .f4-match-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+
+  .f4-match-teams {
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .f4-match-teams .vs {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .f4-final {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, var(--surface), rgba(250,204,21,0.05));
+  }
+
+  .f4-third {
+    border-color: var(--surface-border);
+    opacity: 0.8;
+  }
+
+  .f4-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--surface-border);
+    font-size: 20px;
+  }
+
+  /* === ICON GRID === */
+  .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .icon-item {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex;
+    gap: 14px;
+  }
+
+  .icon-item-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+
+  .icon-item-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+  }
+
+  .icon-item-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* === VISUAL FLOW DIAGRAM === */
+  .flow-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin: 32px 0;
+  }
+
+  .flow-node {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius);
+    padding: 20px 32px;
+    text-align: center;
+    position: relative;
+    min-width: 280px;
+  }
+
+  .flow-node-title {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+
+  .flow-node-sub {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .flow-node.highlight {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, var(--surface), rgba(59,130,246,0.06));
+  }
+
+  .flow-node.gold-highlight {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, var(--surface), rgba(250,204,21,0.06));
+  }
+
+  .flow-node.eliminated {
+    border-color: var(--red);
+    background: var(--red-muted);
+  }
+
+  .flow-arrow-down {
+    width: 3px;
+    height: 32px;
+    background: var(--surface-border);
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .flow-arrow-down::after {
+    content: '▼';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: var(--surface-border);
+  }
+
+  .flow-split {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .flow-split-branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    flex: 1;
+    max-width: 320px;
+  }
+
+  /* === DIVIZE TABLE === */
+  .divize-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .divize-card {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .divize-header {
+    padding: 14px 18px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--surface-border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .divize-team {
+    padding: 10px 18px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .divize-team:last-child { border-bottom: none; }
+  .divize-team .team-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* === TIMELINE === */
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+    margin-top: 24px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: var(--surface-border);
+  }
+
+  .timeline-item {
+    position: relative;
+    padding-bottom: 28px;
+  }
+
+  .timeline-item:last-child { padding-bottom: 0; }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -22px;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+
+  .timeline-date {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .timeline-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+  }
+
+  .timeline-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  /* === FOOTER === */
+  footer {
+    padding: 40px 0;
+    text-align: center;
+    border-top: 1px solid var(--surface-border);
+    margin-top: 40px;
+  }
+
+  footer p {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 768px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .matchup-grid { grid-template-columns: 1fr; }
+    .finale-grid { grid-template-columns: 1fr; }
+    .icon-grid { grid-template-columns: 1fr; }
+    .divize-grid { grid-template-columns: 1fr; }
+    .phase-body { padding-left: 0; margin-top: 12px; }
+    .flow-split { flex-direction: column; align-items: center; }
+    .f4-round { flex-direction: column; align-items: center; }
+    section { padding: 50px 0; }
+  }
+
+  @media (max-width: 480px) {
+    .stats-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-number { font-size: 1.6rem; }
+  }
+
+  /* === ANIMATIONS === */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge">🏒 Sezóna 2025/2026</div>
+    <h1>Jak funguje <span>Play-in</span><br>v Univerzitní lize</h1>
+    <p class="hero-sub">Kompletní průvodce novým systémem ULLH — od základní části přes play-in semifinále a finále až po závěrečný turnaj Final Four.</p>
+  </div>
+</header>
+
+<!-- KEY STATS -->
+<section>
+  <div class="container">
+    <div class="stats-row fade-in">
+      <div class="stat-card">
+        <div class="stat-icon">🏟️</div>
+        <div class="stat-number">12</div>
+        <div class="stat-label">Týmů v lize</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-number">26</div>
+        <div class="stat-label">Zápasů na tým</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-number">10</div>
+        <div class="stat-label">Týmů v play-in</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-number">4</div>
+        <div class="stat-label">Týmy ve Final Four</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OVERVIEW FLOW -->
+<section>
+  <div class="container">
+    <div class="section-label" style="color: var(--ice);">❄️ Přehled</div>
+    <h2 class="section-title">Celý systém na první pohled</h2>
+    <p class="section-desc">Sezóna ULLH 2025/26 přináší zásadní novinku — místo klasického play-off se hraje systémem play-in zakončeným turnajem Final Four.</p>
+
+    <div class="flow-diagram fade-in">
+      <div class="flow-node highlight" style="width:100%; max-width: 500px;">
+        <div class="flow-node-title">🏒 Základní část</div>
+        <div class="flow-node-sub">12 týmů · 26 zápasů · 4 divize po 3 týmech</div>
+      </div>
+      <div class="flow-arrow-down"></div>
+      <div class="flow-split">
+        <div class="flow-split-branch">
+          <div class="flow-node" style="width: 100%;">
+            <div class="flow-node-title">✅ Týmy na 1.–10. místě</div>
+            <div class="flow-node-sub">Postup do play-in</div>
+          </div>
+        </div>
+        <div class="flow-split-branch">
+          <div class="flow-node eliminated" style="width: 100%;">
+            <div class="flow-node-title">❌ Týmy na 11.–12. místě</div>
+            <div class="flow-node-sub">Konec sezóny</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-arrow-down"></div>
+      <div class="flow-node highlight" style="width:100%; max-width: 500px;">
+        <div class="flow-node-title">⚔️ Play-in semifinále</div>
+        <div class="flow-node-sub">Týmy 3.–10. · křížové pravidlo · 4 zápasy</div>
+      </div>
+      <div class="flow-arrow-down"></div>
+      <div class="flow-node highlight" style="width:100%; max-width: 500px;">
+        <div class="flow-node-title">🎯 Play-in finále</div>
+        <div class="flow-node-sub">6 týmů (1., 2. + 4 vítězové SF) · 3 zápasy</div>
+      </div>
+      <div class="flow-arrow-down"></div>
+      <div class="flow-split">
+        <div class="flow-split-branch">
+          <div class="flow-node" style="width: 100%;">
+            <div class="flow-node-title">🎫 Lucky Loser zápas</div>
+            <div class="flow-node-sub">2 nejlepší poražení finalisté</div>
+          </div>
+        </div>
+        <div class="flow-split-branch">
+          <div class="flow-node" style="width: 100%;">
+            <div class="flow-node-title">✅ 3 vítězové finále</div>
+            <div class="flow-node-sub">Přímý postup do Final Four</div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-arrow-down"></div>
+      <div class="flow-node gold-highlight" style="width:100%; max-width: 500px;">
+        <div class="flow-node-title">🏆 Final Four</div>
+        <div class="flow-node-sub">4 týmy · 2 dny · ZS Eden, Praha</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHASES DETAIL -->
+<section style="padding-top: 40px;">
+  <div class="container">
+    <div class="section-label" style="color: var(--accent);">📋 Podrobně</div>
+    <h2 class="section-title">Jednotlivé fáze sezóny</h2>
+    <p class="section-desc">Každá fáze má svá specifická pravidla. Pojďme si je projít jednu po druhé.</p>
+
+    <div class="phase-flow fade-in">
+
+      <!-- FÁZE 1: Základní část -->
+      <div class="phase-card phase-1">
+        <div class="phase-header">
+          <div class="phase-num">1</div>
+          <div>
+            <div class="phase-title">Základní část</div>
+            <div class="phase-subtitle">Říjen — Březen · 26 zápasů na tým</div>
+          </div>
+        </div>
+        <div class="phase-body">
+          <p>Liga se skládá z <strong style="color:var(--text)">12 univerzitních týmů</strong>, které jsou rozděleny do <strong style="color:var(--text)">4 divizí po 3 týmech</strong>.</p>
+          <p>Každý tým odehraje s každým soupeřem dvě utkání (doma a venku) — celkem 22 zápasů. Navíc se týmy v rámci své divize utkají ještě dvakrát navíc, což přidává další 4 zápasy. <strong style="color:var(--text)">Celkem tedy 26 zápasů.</strong></p>
+
+          <div class="callout callout-accent" style="margin-top: 16px;">
+            <div class="callout-icon">💡</div>
+            <div class="callout-text"><strong>Proč divize?</strong> Divize zajišťují, že některé týmy spolu hrají častěji, čímž se budují regionální rivality a intenzivnější atmosféra zápasů.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-connector"></div>
+
+      <!-- FÁZE 2: Play-in Semifinále -->
+      <div class="phase-card phase-2">
+        <div class="phase-header">
+          <div class="phase-num">2</div>
+          <div>
+            <div class="phase-title">Play-in semifinále</div>
+            <div class="phase-subtitle">Březen · Týmy na 3.–10. místě · Jedno utkání</div>
+          </div>
+        </div>
+        <div class="phase-body">
+          <p>Dva poslední týmy (11. a 12. místo) vypadávají. Týmy na <strong style="color:var(--text)">1. a 2. místě</strong> mají výhodu přímého postupu do finále play-in. Zbývajících 8 týmů hraje semifinále podle <strong style="color:var(--text)">křížového pravidla</strong>:</p>
+
+          <div class="matchup-grid">
+            <div class="matchup-card">
+              <div class="matchup-label">Zápas A</div>
+              <div class="matchup-teams">
+                <div class="team-seed"><span>3.</span><small>místo</small></div>
+                <span class="vs">vs</span>
+                <div class="team-seed"><span>10.</span><small>místo</small></div>
+              </div>
+            </div>
+            <div class="matchup-card">
+              <div class="matchup-label">Zápas B</div>
+              <div class="matchup-teams">
+                <div class="team-seed"><span>4.</span><small>místo</small></div>
+                <span class="vs">vs</span>
+                <div class="team-seed"><span>9.</span><small>místo</small></div>
+              </div>
+            </div>
+            <div class="matchup-card">
+              <div class="matchup-label">Zápas C</div>
+              <div class="matchup-teams">
+                <div class="team-seed"><span>5.</span><small>místo</small></div>
+                <span class="vs">vs</span>
+                <div class="team-seed"><span>8.</span><small>místo</small></div>
+              </div>
+            </div>
+            <div class="matchup-card">
+              <div class="matchup-label">Zápas D</div>
+              <div class="matchup-teams">
+                <div class="team-seed"><span>6.</span><small>místo</small></div>
+                <span class="vs">vs</span>
+                <div class="team-seed"><span>7.</span><small>místo</small></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout-accent">
+            <div class="callout-icon">🔀</div>
+            <div class="callout-text"><strong>Křížové pravidlo:</strong> Nejlepší tým hraje s nejhorším, druhý nejlepší s druhým nejhorším atd. To odměňuje úspěch v základní části — lepší umístění = slabší soupeř.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-connector"></div>
+
+      <!-- FÁZE 3: Play-in Finále -->
+      <div class="phase-card phase-3">
+        <div class="phase-header">
+          <div class="phase-num">3</div>
+          <div>
+            <div class="phase-title">Play-in finále</div>
+            <div class="phase-subtitle">Březen–Duben · 6 týmů · 3 zápasy</div>
+          </div>
+        </div>
+        <div class="phase-body">
+          <p>Do finále play-in vstupují <strong style="color:var(--text)">týmy z 1. a 2. místa</strong> po základní části spolu se <strong style="color:var(--text)">4 vítězi semifinále</strong>. Celkem 6 týmů, 3 dvojice — opět podle křížového pravidla:</p>
+
+          <div class="finale-grid">
+            <div class="matchup-card">
+              <div class="matchup-label">Finále I</div>
+              <div class="matchup-teams">
+                <div class="team-seed"><span>1.</span><small>místo</small></div>
+                <span class="vs">vs</span>
+                <div class="team-seed"><span>SF ↓</span><small>nejnižší</small></div>
+              </div>
+            </div>
+            <div class="matchup-card">
+              <div class="matchup-label">Finále II</div>
+              <div class="matchup-teams">
+                <div class="team-seed"><span>2.</span><small>místo</small></div>
+                <span class="vs">vs</span>
+                <div class="team-seed"><span>SF ↓</span><small>2. nejnižší</small></div>
+              </div>
+            </div>
+            <div class="matchup-card">
+              <div class="matchup-label">Finále III</div>
+              <div class="matchup-teams">
+                <div class="team-seed"><span>SF ↑</span><small>nejvyšší</small></div>
+                <span class="vs">vs</span>
+                <div class="team-seed"><span>SF ↑</span><small>2. nejvyšší</small></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout-orange">
+            <div class="callout-icon">📊</div>
+            <div class="callout-text"><strong>Výhoda 1. a 2. místa:</strong> Tyto týmy mají nejen volno v semifinále, ale ve finále čelí nejhůře umístěným vítězům semifinále. Dva nejlépe nasazení vítězové semifinále hrají mezi sebou.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-connector"></div>
+
+      <!-- FÁZE 4: Lucky Loser -->
+      <div class="phase-card phase-4">
+        <div class="phase-header">
+          <div class="phase-num">4</div>
+          <div>
+            <div class="phase-title">Lucky Loser</div>
+            <div class="phase-subtitle">Duben · 1 extra zápas o poslední místo ve Final Four</div>
+          </div>
+        </div>
+        <div class="phase-body">
+          <p>Ze 3 poražených finalistů play-in se vyberou <strong style="color:var(--text)">2 nejlépe umístěné týmy</strong> podle základní části. Ty odehrají jeden rozhodující zápas — vítěz se stane čtvrtým účastníkem Final Four.</p>
+
+          <div class="callout callout-purple">
+            <div class="callout-icon">🎰</div>
+            <div class="callout-text"><strong>Druhá šance:</strong> Lucky Loser koncept dává silným týmům druhou šanci. I když prohrají finále play-in, mohou se stále dostat do Final Four — ale musí si to vybojovat v přímém souboji.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-connector"></div>
+
+      <!-- FÁZE 5: Final Four -->
+      <div class="phase-card phase-5">
+        <div class="phase-header">
+          <div class="phase-num">5</div>
+          <div>
+            <div class="phase-title">Final Four</div>
+            <div class="phase-subtitle">Duben · 2 dny · ZS Eden, Praha</div>
+          </div>
+        </div>
+        <div class="phase-body">
+          <p>Závěrečný turnaj čtyř nejlepších týmů se odehraje během <strong style="color:var(--text)">dvou dnů na Zimním stadionu Eden v Praze</strong>. Semifinálové dvojice jsou určeny křížovým pravidlem dle umístění v základní části.</p>
+
+          <div class="f4-bracket">
+            <div class="f4-round">
+              <div class="f4-match">
+                <div class="f4-match-label">Semifinále 1</div>
+                <div class="f4-match-teams">
+                  <span>Tým A</span>
+                  <span class="vs">vs</span>
+                  <span>Tým D</span>
+                </div>
+              </div>
+              <div class="f4-match">
+                <div class="f4-match-label">Semifinále 2</div>
+                <div class="f4-match-teams">
+                  <span>Tým B</span>
+                  <span class="vs">vs</span>
+                  <span>Tým C</span>
+                </div>
+              </div>
+            </div>
+            <div class="f4-arrow">▼</div>
+            <div class="f4-round">
+              <div class="f4-match f4-final">
+                <div class="f4-match-label" style="color: var(--gold);">🏆 Velké finále</div>
+                <div class="f4-match-teams">
+                  <span>Vítěz SF1</span>
+                  <span class="vs">vs</span>
+                  <span>Vítěz SF2</span>
+                </div>
+              </div>
+              <div class="f4-match f4-third">
+                <div class="f4-match-label">🥉 O 3. místo</div>
+                <div class="f4-match-teams">
+                  <span>Poražený SF1</span>
+                  <span class="vs">vs</span>
+                  <span>Poražený SF2</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout-gold">
+            <div class="callout-icon">⭐</div>
+            <div class="callout-text"><strong>Formát Final Four:</strong> Všechna utkání se hrají na <strong>jedno utkání</strong> — žádné série. To přidává dramatičnost a nepředvídatelnost — každý zápas může být poslední.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CO JE NOVÉHO -->
+<section>
+  <div class="container">
+    <div class="section-label" style="color: var(--green);">✨ Novinky</div>
+    <h2 class="section-title">Co se změnilo oproti minulým ročníkům</h2>
+    <p class="section-desc">Sezóna 2025/26 přinesla několik klíčových změn ve formátu soutěže.</p>
+
+    <div class="icon-grid fade-in">
+      <div class="icon-item">
+        <div class="icon-item-icon">🔄</div>
+        <div>
+          <div class="icon-item-title">Play-in místo play-off</div>
+          <div class="icon-item-desc">Klasický vyřazovací formát nahrazen systémem play-in, který dává více týmům šanci a zajišťuje více zápasů.</div>
+        </div>
+      </div>
+      <div class="icon-item">
+        <div class="icon-item-icon">🏟️</div>
+        <div>
+          <div class="icon-item-title">Final Four na Edenu</div>
+          <div class="icon-item-desc">Závěrečný turnaj se hraje jako dvoudenní akce na jednom místě — po vzoru univerzitního sportu v USA.</div>
+        </div>
+      </div>
+      <div class="icon-item">
+        <div class="icon-item-icon">🎫</div>
+        <div>
+          <div class="icon-item-title">Lucky Loser koncept</div>
+          <div class="icon-item-desc">Nový mechanismus druhé šance pro poražené finalisty play-in — více napětí a víc zápasů.</div>
+        </div>
+      </div>
+      <div class="icon-item">
+        <div class="icon-item-icon">📍</div>
+        <div>
+          <div class="icon-item-title">Divize v základní části</div>
+          <div class="icon-item-desc">Liga rozdělena do 4 divizí po 3 týmech s extra zápasy uvnitř divize — celkem 26 zápasů místo dosavadních 22.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KEY PRINCIPLES -->
+<section>
+  <div class="container">
+    <div class="section-label" style="color: var(--orange);">⚖️ Klíčové principy</div>
+    <h2 class="section-title">Na čem systém stojí</h2>
+    <p class="section-desc">Play-in formát je postaven na několika zásadách, které odměňují výkon v základní části.</p>
+
+    <div class="icon-grid fade-in">
+      <div class="icon-item">
+        <div class="icon-item-icon">🔀</div>
+        <div>
+          <div class="icon-item-title">Křížové pravidlo</div>
+          <div class="icon-item-desc">Prolíná se celým systémem — lepší umístění v základní části = slabší soupeř ve vyřazovacích kolech. Motivace bojovat o každý bod.</div>
+        </div>
+      </div>
+      <div class="icon-item">
+        <div class="icon-item-icon">⏭️</div>
+        <div>
+          <div class="icon-item-title">Výhoda prvních dvou</div>
+          <div class="icon-item-desc">Týmy na 1. a 2. místě mají volno v semifinále a čelí slabším soupeřům ve finále — reálná odměna za výkon.</div>
+        </div>
+      </div>
+      <div class="icon-item">
+        <div class="icon-item-icon">⚔️</div>
+        <div>
+          <div class="icon-item-title">Jedno utkání rozhoduje</div>
+          <div class="icon-item-desc">Žádné série na 3 nebo 5 zápasů. Každý zápas v play-in i Final Four je rozhodující — maximální dramatičnost.</div>
+        </div>
+      </div>
+      <div class="icon-item">
+        <div class="icon-item-icon">🎪</div>
+        <div>
+          <div class="icon-item-title">Zážitkový finiš</div>
+          <div class="icon-item-desc">Final Four na jednom stadionu za dva dny vytváří festivalovou atmosféru — inspirace NCAA March Madness.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p>ULLH Play-in systém · Sezóna 2025/2026 · Zdroje: <a href="https://univerzitnihokej.cz/" target="_blank" rel="noopener">univerzitnihokej.cz</a>, <a href="https://www.hokej.cz/ullh" target="_blank" rel="noopener">hokej.cz</a></p>
+  </div>
+</footer>
+
+<script>
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Also make all non-fade elements visible immediately
+  document.querySelectorAll('.phase-card, .flow-node, .matchup-card, .f4-match, .icon-item').forEach(el => {
+    el.style.opacity = '1';
+  });
+</script>
+
+</body>
+</html>
