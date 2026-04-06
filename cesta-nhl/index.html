@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cesta českého hokejisty do NHL</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0f0f10;
+  --surface: #1a1a1d;
+  --surface-border: #2a2a2d;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --accent: #D97757;
+  --accent-muted: rgba(217, 119, 87, 0.15);
+  --accent-glow: rgba(217, 119, 87, 0.3);
+  --green: #4ade80;
+  --green-muted: rgba(74, 222, 128, 0.15);
+  --blue: #60a5fa;
+  --blue-muted: rgba(96, 165, 250, 0.15);
+  --yellow: #facc15;
+  --yellow-muted: rgba(250, 204, 21, 0.15);
+  --red: #f87171;
+  --red-muted: rgba(248, 113, 113, 0.15);
+  --purple: #c084fc;
+  --purple-muted: rgba(192, 132, 252, 0.15);
+  --radius: 12px;
+  --max-width: 1000px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Hero ── */
+.hero {
+  padding: 100px 0 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.hero-emoji {
+  font-size: 64px;
+  margin-bottom: 24px;
+  display: block;
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.hero h1 span { color: var(--accent); }
+
+.hero p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* ── Section ── */
+section { padding: 80px 0; }
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.section-desc {
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin-bottom: 48px;
+  font-size: 1rem;
+}
+
+/* ── Stat Cards ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+}
+
+.stat-card .number {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1.1;
+}
+
+.stat-card .label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+/* ── Timeline ── */
+.timeline {
+  position: relative;
+  padding-left: 40px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), var(--blue), var(--green), var(--purple), var(--yellow));
+  border-radius: 2px;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 40px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.timeline-item:nth-child(1) { animation-delay: 0.1s; }
+.timeline-item:nth-child(2) { animation-delay: 0.2s; }
+.timeline-item:nth-child(3) { animation-delay: 0.3s; }
+.timeline-item:nth-child(4) { animation-delay: 0.4s; }
+.timeline-item:nth-child(5) { animation-delay: 0.5s; }
+.timeline-item:nth-child(6) { animation-delay: 0.6s; }
+.timeline-item:nth-child(7) { animation-delay: 0.7s; }
+
+.timeline-dot {
+  position: absolute;
+  left: -33px;
+  top: 6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  background: var(--bg);
+  z-index: 1;
+}
+
+.timeline-item:nth-child(2) .timeline-dot { border-color: var(--blue); }
+.timeline-item:nth-child(3) .timeline-dot { border-color: var(--blue); }
+.timeline-item:nth-child(4) .timeline-dot { border-color: var(--green); }
+.timeline-item:nth-child(5) .timeline-dot { border-color: var(--green); }
+.timeline-item:nth-child(6) .timeline-dot { border-color: var(--purple); }
+.timeline-item:nth-child(7) .timeline-dot { border-color: var(--yellow); }
+
+.timeline-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.timeline-age {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.age-orange { background: var(--accent-muted); color: var(--accent); }
+.age-blue { background: var(--blue-muted); color: var(--blue); }
+.age-green { background: var(--green-muted); color: var(--green); }
+.age-purple { background: var(--purple-muted); color: var(--purple); }
+.age-yellow { background: var(--yellow-muted); color: var(--yellow); }
+
+.timeline-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.timeline-card p {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.timeline-card .cost-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-muted);
+  padding: 4px 12px;
+  border-radius: 8px;
+}
+
+/* ── Funnel / Pyramid ── */
+.funnel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 48px;
+}
+
+.funnel-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: var(--radius);
+  padding: 16px 24px;
+  text-align: center;
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.funnel-bar:hover { transform: scale(1.02); }
+
+.funnel-bar .funnel-num {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.funnel-bar .funnel-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.funnel-arrow {
+  color: var(--text-secondary);
+  font-size: 1.2rem;
+  opacity: 0.4;
+}
+
+/* ── Cost Table ── */
+.cost-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--surface-border);
+  margin-bottom: 32px;
+}
+
+.cost-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.cost-table thead {
+  background: var(--surface);
+}
+
+.cost-table th {
+  padding: 14px 18px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--surface-border);
+  white-space: nowrap;
+}
+
+.cost-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--surface-border);
+  color: var(--text-secondary);
+}
+
+.cost-table tbody tr:nth-child(odd) {
+  background: rgba(255,255,255,0.015);
+}
+
+.cost-table tbody tr:hover {
+  background: rgba(217, 119, 87, 0.05);
+}
+
+.cost-table td:first-child {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.cost-table .highlight {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.cost-table tfoot td {
+  font-weight: 700;
+  color: var(--accent);
+  border-top: 2px solid var(--accent);
+  font-size: 1rem;
+}
+
+/* ── Money Flow Diagram ── */
+.flow-diagram {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.flow-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+}
+
+.flow-entity {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+}
+
+.flow-entity.nhl-team {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px var(--accent-muted);
+}
+
+.flow-entity .entity-icon { font-size: 2rem; margin-bottom: 8px; }
+.flow-entity .entity-name { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+.flow-entity .entity-amount { color: var(--accent); font-weight: 800; font-size: 1.3rem; }
+.flow-entity .entity-desc { color: var(--text-secondary); font-size: 0.82rem; margin-top: 4px; }
+
+.flow-arrow {
+  font-size: 1.5rem;
+  color: var(--accent);
+  text-align: center;
+}
+
+/* ── Cards Grid ── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.info-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.info-card .card-icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.info-card h3 {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+}
+
+.info-card p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* ── Callout ── */
+.callout {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-muted);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 20px 24px;
+  margin-bottom: 48px;
+}
+
+.callout p {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.callout strong { color: var(--text-primary); }
+
+/* ── Money Cards ── */
+.money-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.money-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.money-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.money-card.mc-nhl::before { background: var(--accent); }
+.money-card.mc-club::before { background: var(--green); }
+.money-card.mc-fed::before { background: var(--blue); }
+.money-card.mc-player::before { background: var(--yellow); }
+
+.money-card .mc-icon { font-size: 2.2rem; margin-bottom: 10px; }
+.money-card .mc-who { font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; }
+.money-card .mc-amount { font-size: 1.8rem; font-weight: 800; margin-bottom: 6px; }
+.money-card.mc-nhl .mc-amount { color: var(--accent); }
+.money-card.mc-club .mc-amount { color: var(--green); }
+.money-card.mc-fed .mc-amount { color: var(--blue); }
+.money-card.mc-player .mc-amount { color: var(--yellow); }
+.money-card .mc-note { font-size: 0.82rem; color: var(--text-secondary); }
+
+/* ── Progress Bar ── */
+.progress-item {
+  margin-bottom: 20px;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 0.88rem;
+}
+
+.progress-label span:first-child { font-weight: 600; }
+.progress-label span:last-child { color: var(--text-secondary); }
+
+.progress-bar {
+  height: 10px;
+  background: var(--surface-border);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 1s ease;
+}
+
+/* ── Badges ── */
+.badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.badge-green { background: var(--green-muted); color: var(--green); }
+.badge-red { background: var(--red-muted); color: var(--red); }
+.badge-blue { background: var(--blue-muted); color: var(--blue); }
+.badge-yellow { background: var(--yellow-muted); color: var(--yellow); }
+.badge-purple { background: var(--purple-muted); color: var(--purple); }
+
+/* ── Footer ── */
+.page-footer {
+  padding: 40px 0;
+  border-top: 1px solid var(--surface-border);
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+/* ── Separator ── */
+.sep {
+  height: 1px;
+  background: var(--surface-border);
+  margin: 0;
+}
+
+/* ── Animation ── */
+@keyframes fadeInUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .hero { padding: 60px 0 50px; }
+  .hero-emoji { font-size: 48px; }
+  section { padding: 50px 0; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .flow-row { grid-template-columns: 1fr; }
+  .flow-arrow { transform: rotate(90deg); }
+  .money-cards { grid-template-columns: 1fr 1fr; }
+  .cost-table { font-size: 0.82rem; }
+  .cost-table th, .cost-table td { padding: 10px 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+  <div class="container">
+    <span class="hero-emoji">🏒</span>
+    <h1>Cesta českého hokejisty<br><span>od přípravky až do NHL</span></h1>
+    <p>Jak vypadá 14 let vývoje, kolik to stojí rodinu peněz a kdo na tom nakonec vydělá, když si hráče vybere tým v NHL draftu.</p>
+  </div>
+</header>
+
+<!-- ═══ KEY NUMBERS ═══ -->
+<section>
+  <div class="container">
+    <div class="section-label">📊 Klíčová čísla</div>
+    <h2 class="section-title">Hokej v číslech</h2>
+    <p class="section-desc">Co říkají data o české hokejové mládeži a cestě do nejlepší ligy světa.</p>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="number">~14 let</div>
+        <div class="label">Délka vývoje od přípravky po draft</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">3–5 mil. Kč</div>
+        <div class="label">Celkové náklady rodiny za výchovu hráče</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">~200 000 $</div>
+        <div class="label">Transferový poplatek NHL za hráče</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">975 000 $</div>
+        <div class="label">Max. roční plat na ELC kontraktu (2025)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ═══ TIMELINE ═══ -->
+<section>
+  <div class="container">
+    <div class="section-label">🗓️ Vývojové fáze</div>
+    <h2 class="section-title">Od brusliček po NHL draft</h2>
+    <p class="section-desc">Časová osa ukazuje, čím český hokejista prochází od 4 do 18 let, než se objeví na radaru NHL skautů.</p>
+
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <span class="timeline-age age-orange">4–8 let</span>
+          <h3>🧒 Pojď hrát hokej — Přípravka</h3>
+          <p>Dítě vstupuje do projektu ČSLH „Pojď hrát hokej". Důraz na bruslení, pohybovou gramotnost a radost ze hry. Tréninky 2–3× týdně, žádné výsledky, žádný tlak. Většina klubů nabízí zapůjčení výstroje pro úplné začátečníky zdarma nebo za symbolickou cenu.</p>
+          <span class="cost-tag">💰 30–50 tis. Kč / rok</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <span class="timeline-age age-blue">8–12 let — U10 / U12</span>
+          <h3>⛸️ Žákovské kategorie</h3>
+          <p>Regionální trenéři ČSLH dohled nad kvalitou. Začíná se hrát v soutěžích, ale stále se učí herní dovednosti. Projekt VTM (Výchova talentované mládeže) identifikuje první talenty v krajích. Výstroj se mění rychle — děti rostou, brusle a hokejky se kupují 1–2× za sezónu.</p>
+          <span class="cost-tag">💰 60–90 tis. Kč / rok</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <span class="timeline-age age-blue">12–15 let — U14 / U15</span>
+          <h3>🏋️ Starší žáci a VTM výběry</h3>
+          <p>Klíčový moment selekce. Nejtalentovanější hráči jsou zváni do krajských výběrů VTM a reprezentačních kempů U15. Přibývají letní kempy, individuální tréninky, turnaje v zahraničí. Kluby top kategorie mají 4–5 tréninků + 2 zápasy týdně.</p>
+          <span class="cost-tag">💰 100–150 tis. Kč / rok</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <span class="timeline-age age-green">15–16 let — U16 / Dorost</span>
+          <h3>🎯 Akademie Českého hokeje</h3>
+          <p>Vstup do dorosteneckých soutěží. Licencované Akademie (dříve „hokejové akademie") mají přísné podmínky — kvalita trenérů, zázemí, počet ledových hodin. Hráč trénuje denně, k tomu kondiční příprava mimo led. NHL skauti už sledují turnaje U16.</p>
+          <span class="cost-tag">💰 120–180 tis. Kč / rok</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <span class="timeline-age age-green">16–18 let — U18 / Junioři</span>
+          <h3>🌟 Juniorská extraliga &amp; reprezentace</h3>
+          <p>Extraliga juniorů (16 týmů) je nejvyšší mládežnická soutěž. Nejlepší hráči jsou zváni do reprezentace U18 a U20, hrají MS juniorů. Někteří dostávají šanci v extralize mužů. Tohle je draft year — rok, kdy si NHL týmy definitivně vybírají.</p>
+          <span class="cost-tag">💰 150–200+ tis. Kč / rok</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <span class="timeline-age age-purple">18 let</span>
+          <h3>📋 NHL Draft</h3>
+          <p>Vstupní draft NHL — 7 kol, 224 výběrů. Český hráč je vybrán NHL týmem. Podpis entry-level kontraktu (ELC) na 3 roky. Může zůstat v Evropě na „loan" nebo odjet rovnou do Severní Ameriky (NHL / AHL).</p>
+          <span class="cost-tag">🎉 Konec investic, začátek výdělků</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <span class="timeline-age age-yellow">18–21 let</span>
+          <h3>🏆 Entry-Level Contract v NHL</h3>
+          <p>Tříletý ELC s maximálním platem 975 000 $ ročně (2025) + výkonnostní bonusy až do dalšího ~850 000 $. Hráč buď nastupuje přímo v NHL, nebo se vyvíjí v AHL. Po skončení ELC přichází omezené volné hráčství (RFA) a první „velký" kontrakt.</p>
+          <span class="cost-tag">💵 Až 975 000 $ / rok + bonusy</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ═══ FUNNEL ═══ -->
+<section>
+  <div class="container">
+    <div class="section-label">📐 Selekční pyramida</div>
+    <h2 class="section-title">Z tisíců dětí zbyde hrstka</h2>
+    <p class="section-desc">Kolik dětí začne s hokejem a kolik se jich reálně dostane k draftu. Čísla jsou orientační odhady pro jednu generaci (ročník).</p>
+
+    <div class="funnel">
+      <div class="funnel-bar" style="width:100%; background: var(--accent-muted); border: 1px solid rgba(217,119,87,0.3);">
+        <span class="funnel-num" style="color:var(--accent);">~3 000</span>
+        <span class="funnel-label">dětí nastoupí do přípravky (jeden ročník)</span>
+      </div>
+      <div class="funnel-arrow">▼</div>
+      <div class="funnel-bar" style="width:75%; background: var(--blue-muted); border: 1px solid rgba(96,165,250,0.3);">
+        <span class="funnel-num" style="color:var(--blue);">~1 200</span>
+        <span class="funnel-label">pokračuje v žákovských kategoriích</span>
+      </div>
+      <div class="funnel-arrow">▼</div>
+      <div class="funnel-bar" style="width:50%; background: var(--green-muted); border: 1px solid rgba(74,222,128,0.3);">
+        <span class="funnel-num" style="color:var(--green);">~400</span>
+        <span class="funnel-label">projde VTM výběry / dorostem v top klubech</span>
+      </div>
+      <div class="funnel-arrow">▼</div>
+      <div class="funnel-bar" style="width:30%; background: var(--purple-muted); border: 1px solid rgba(192,132,252,0.3);">
+        <span class="funnel-num" style="color:var(--purple);">~120</span>
+        <span class="funnel-label">hraje juniorskou extraligu na top úrovni</span>
+      </div>
+      <div class="funnel-arrow">▼</div>
+      <div class="funnel-bar" style="width:15%; background: var(--yellow-muted); border: 1px solid rgba(250,204,21,0.3);">
+        <span class="funnel-num" style="color:var(--yellow);">5–15</span>
+        <span class="funnel-label">Čechů draftováno do NHL ročně</span>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>Šance na draft?</strong> Zhruba 0,3–0,5 % dětí, které začnou s hokejem, se nakonec dostane na NHL draft. A i z draftovaných hráčů nakonec odehraje v NHL více než 100 zápasů jen asi polovina.</p>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ═══ COSTS TABLE ═══ -->
+<section>
+  <div class="container">
+    <div class="section-label">💸 Náklady</div>
+    <h2 class="section-title">Kolik stojí vychovat hokejový talent</h2>
+    <p class="section-desc">Přehled typických ročních nákladů rodiny v jednotlivých fázích vývoje. Částky vychází z dat za sezónu 2025/2026 pro kluby ve vyšších soutěžích.</p>
+
+    <div class="cost-table-wrap">
+      <table class="cost-table">
+        <thead>
+          <tr>
+            <th>Položka</th>
+            <th>Přípravka (4–8)</th>
+            <th>Žáci (8–12)</th>
+            <th>St. žáci (12–15)</th>
+            <th>Dorost (15–17)</th>
+            <th>Junioři (17–18+)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Klubové příspěvky</td>
+            <td>3–8 tis.</td>
+            <td>12–24 tis.</td>
+            <td>18–36 tis.</td>
+            <td>20–40 tis.</td>
+            <td>0–20 tis.*</td>
+          </tr>
+          <tr>
+            <td>Výstroj</td>
+            <td>8–15 tis.</td>
+            <td>15–25 tis.</td>
+            <td>25–40 tis.</td>
+            <td>35–50 tis.</td>
+            <td>40–60 tis.</td>
+          </tr>
+          <tr>
+            <td>Hokejky (spotřeba)</td>
+            <td>2–4 tis.</td>
+            <td>4–8 tis.</td>
+            <td>12–24 tis.</td>
+            <td>24–36 tis.</td>
+            <td>28–40 tis.</td>
+          </tr>
+          <tr>
+            <td>Brusle</td>
+            <td>3–5 tis.</td>
+            <td>5–10 tis.</td>
+            <td>10–18 tis.</td>
+            <td>18–26 tis.</td>
+            <td>18–26 tis.</td>
+          </tr>
+          <tr>
+            <td>Turnaje a cestování</td>
+            <td>5–10 tis.</td>
+            <td>10–20 tis.</td>
+            <td>20–40 tis.</td>
+            <td>25–50 tis.</td>
+            <td>15–30 tis.</td>
+          </tr>
+          <tr>
+            <td>Letní kempy / individ.</td>
+            <td>5–10 tis.</td>
+            <td>10–20 tis.</td>
+            <td>20–35 tis.</td>
+            <td>25–40 tis.</td>
+            <td>20–35 tis.</td>
+          </tr>
+          <tr>
+            <td>Broušení, tape, doplňky</td>
+            <td>1–2 tis.</td>
+            <td>3–5 tis.</td>
+            <td>5–8 tis.</td>
+            <td>5–10 tis.</td>
+            <td>5–10 tis.</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Celkem / rok</td>
+            <td class="highlight">30–50 tis.</td>
+            <td class="highlight">60–110 tis.</td>
+            <td class="highlight">110–200 tis.</td>
+            <td class="highlight">150–250 tis.</td>
+            <td class="highlight">130–220 tis.</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="callout">
+      <p><strong>* Pozn.:</strong> V juniorském věku už někteří top hráči mají od klubu hrazenou výstroj nebo dostávají stipendium. Naopak méně talentovaní junioři stále platí příspěvky. Celkové náklady za celou kariéru od přípravky po draft se pohybují kolem <strong>3–5 milionů Kč</strong>.</p>
+    </div>
+
+    <h3 style="font-size:1.1rem; margin-bottom:20px; font-weight:700;">Kam jdou peníze rodičů?</h3>
+    <div class="cards-grid">
+      <div class="info-card">
+        <div class="card-icon">🏟️</div>
+        <h3>Provoz zimního stadionu</h3>
+        <p>Ledové hodiny tvoří největší nákladovou položku klubu. Energie na provoz zimáku dosahují milionů ročně — příspěvky rodičů jdou z velké části sem.</p>
+      </div>
+      <div class="info-card">
+        <div class="card-icon">👨‍🏫</div>
+        <h3>Trenérské zázemí</h3>
+        <p>Profesionální mládežničtí trenéři, kondiční trenéři, videoananalytik. U akademií ČSLH musí klub splnit přísné licenční podmínky pro kvalitu trenérů.</p>
+      </div>
+      <div class="info-card">
+        <div class="card-icon">🚐</div>
+        <h3>Cestování a turnaje</h3>
+        <p>Venkovní zápasy, prestižní turnaje v ČR i zahraničí. Víkendový turnaj = 10–25 tis. Kč za rodinu (startovné, ubytování, cestovné).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ═══ MONEY FLOW ═══ -->
+<section>
+  <div class="container">
+    <div class="section-label">💰 Tok peněz</div>
+    <h2 class="section-title">Kdo dostane kolik, když hráče draftují</h2>
+    <p class="section-desc">Když NHL tým draftuje českého hráče a podepíše s ním entry-level kontrakt, spustí se finanční mechanismus dle mezinárodní transferové dohody NHL–IIHF.</p>
+
+    <div class="money-cards">
+      <div class="money-card mc-nhl">
+        <div class="mc-icon">🏒</div>
+        <div class="mc-who">NHL tým platí</div>
+        <div class="mc-amount">~200 000 $</div>
+        <div class="mc-note">Transferový poplatek za podpis hráče z Evropy (dle dohody NHL–IIHF)</div>
+      </div>
+      <div class="money-card mc-club">
+        <div class="mc-icon">🏟️</div>
+        <div class="mc-who">České kluby dostanou</div>
+        <div class="mc-amount">~100–160 tis. $</div>
+        <div class="mc-note">Rozděleno mezi poslední 4 kluby, ve kterých hráč působil (výchovné)</div>
+      </div>
+      <div class="money-card mc-fed">
+        <div class="mc-icon">🇨🇿</div>
+        <div class="mc-who">ČSLH / IIHF dostane</div>
+        <div class="mc-amount">~40–100 tis. $</div>
+        <div class="mc-note">Podíl svazu na transferu + kompenzace za rozvoj hokeje v zemi</div>
+      </div>
+      <div class="money-card mc-player">
+        <div class="mc-icon">⭐</div>
+        <div class="mc-who">Hráč vydělá</div>
+        <div class="mc-amount">až 975 tis. $ / rok</div>
+        <div class="mc-note">ELC kontrakt na 3 roky + výkonnostní bonusy až ~850 tis. $ navíc</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>Kontext:</strong> Česká republika v minulosti protestovala, že 200 000 $ za hráče je nedostatečná kompenzace za roky investic do jeho vývoje. Pro srovnání — rodina investuje 3–5 mil. Kč (~120–200 tis. $), klub a stát pak další miliony na infrastrukturu a trenéry. Celková investice do jednoho draftovaného hráče tak mnohonásobně převyšuje transferový poplatek.</p>
+    </div>
+
+    <h3 style="font-size:1.1rem; margin-bottom:20px; font-weight:700;">Entry-Level Contract — co hráč vydělá</h3>
+
+    <div class="progress-item">
+      <div class="progress-label">
+        <span>Základní plat (NHL)</span>
+        <span>až 975 000 $ / rok</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width:100%; background: var(--accent);"></div>
+      </div>
+    </div>
+    <div class="progress-item">
+      <div class="progress-label">
+        <span>Výkonnostní bonusy</span>
+        <span>až ~850 000 $ / rok</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width:87%; background: var(--yellow);"></div>
+      </div>
+    </div>
+    <div class="progress-item">
+      <div class="progress-label">
+        <span>Signing bonus</span>
+        <span>až 10 % hodnoty kontraktu</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width:30%; background: var(--green);"></div>
+      </div>
+    </div>
+    <div class="progress-item">
+      <div class="progress-label">
+        <span>Plat v AHL (pokud ne v NHL)</span>
+        <span>~70 000–80 000 $ / rok</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width:8%; background: var(--text-secondary);"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ═══ KEY PLAYERS ═══ -->
+<section>
+  <div class="container">
+    <div class="section-label">🧩 Aktéři systému</div>
+    <h2 class="section-title">Kdo hraje jakou roli</h2>
+    <p class="section-desc">Přehled všech klíčových institucí a osob, které se podílejí na cestě hráče od přípravky po NHL.</p>
+
+    <div class="cards-grid">
+      <div class="info-card">
+        <div class="card-icon">👨‍👩‍👦</div>
+        <h3>Rodina</h3>
+        <p>Hlavní investor. Platí příspěvky, výstroj, turnaje, kempy, individuální tréninky. Vozí dítě na tréninky a zápasy — obrovská časová i finanční zátěž po 10–14 let.</p>
+      </div>
+      <div class="info-card">
+        <div class="card-icon">🏟️</div>
+        <h3>Mateřský klub</h3>
+        <p>Zajišťuje ledové hodiny, trenéry, soutěže. Investuje do zázemí. U Akademií ČSLH musí splnit přísný ranking a licenční podmínky. Za odchod hráče inkasuje výchovné.</p>
+      </div>
+      <div class="info-card">
+        <div class="card-icon">🇨🇿</div>
+        <h3>ČSLH (Český svaz)</h3>
+        <p>Organizuje soutěže, projekty VTM a Akademie. Financuje reprezentace U16–U20. Vyjednává transferové dohody s NHL. Inkasuje podíl z transferů.</p>
+      </div>
+      <div class="info-card">
+        <div class="card-icon">🔍</div>
+        <h3>NHL skauti / Central Scouting</h3>
+        <p>Sledují hráče od 15–16 let na turnajích, MS juniorů, extralize. NHL Central Scouting vydává průběžné žebříčky evropských hráčů před draftem.</p>
+      </div>
+      <div class="info-card">
+        <div class="card-icon">📋</div>
+        <h3>Agent hráče</h3>
+        <p>Pomáhá s vyjednáváním kontraktu, právními záležitostmi a plánováním kariéry. Obvykle vstupuje do hry v 16–17 letech, když je hráč na radar NHL.</p>
+      </div>
+      <div class="info-card">
+        <div class="card-icon">🌍</div>
+        <h3>IIHF</h3>
+        <p>Mezinárodní hokejová federace — zastřešuje transferovou dohodu s NHL, stanovuje pravidla pro přestupy hráčů mezi zeměmi a distribuje finanční kompenzace.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ═══ WHAT CZECH REPUBLIC GETS ═══ -->
+<section>
+  <div class="container">
+    <div class="section-label">⚖️ Spravedlivé?</div>
+    <h2 class="section-title">Investice vs. kompenzace</h2>
+    <p class="section-desc">Porovnání toho, kolik se celkově investuje do vývoje jednoho hráče, vs. kolik se za něj vrátí při draftu.</p>
+
+    <div class="stats-row">
+      <div class="stat-card" style="border-color: var(--red); border-width: 2px;">
+        <div class="number" style="color: var(--red);">3–5 mil. Kč</div>
+        <div class="label">Investice rodiny (14 let)</div>
+      </div>
+      <div class="stat-card" style="border-color: var(--red); border-width: 2px;">
+        <div class="number" style="color: var(--red);">5–15 mil. Kč</div>
+        <div class="label">Investice klubu a státu (infrastruktura, trenéři)</div>
+      </div>
+      <div class="stat-card" style="border-color: var(--green); border-width: 2px;">
+        <div class="number" style="color: var(--green);">~5 mil. Kč</div>
+        <div class="label">Transferový poplatek (200 tis. $)</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>Klíčový nepoměr:</strong> Celková investice do jednoho draftovaného hráče (rodina + klub + stát) dosahuje 8–20 mil. Kč. Transferový poplatek 200 000 $ (cca 5 mil. Kč) pokryje jen zlomek. Proto česká strana opakovaně požaduje vyšší kompenzace. Systém ale funguje, protože hráčům se otevírá kariéra za miliony dolarů — a ti nejlepší se později vracejí a financují český hokej nepřímo (charity, akademie, popularita sportu).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="page-footer">
+  <div class="container">
+    <p>Vytvořeno v dubnu 2026 · Data vychází z veřejně dostupných zdrojů ČSLH, NHL.com a oborových médií · Částky jsou orientační</p>
+  </div>
+</footer>
+
+</body>
+</html>
